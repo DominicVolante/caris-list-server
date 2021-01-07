@@ -1,27 +1,24 @@
-# Tuck (Server)
+# Cari's List (Server)
 
-App Live at https://tuckit.vercel.app/
+App Live at
 
-## Public Endpoints 
+## Public Endpoints
 
 ### Symptoms
-- GET /symptoms
-   - returns all symptoms previously added
-- POST /symptoms
-    - posts a new symptom entered by the user to the server
-- PATCH /symptoms/:id
-    - updates specified symptom with new details provided by the user
-- DELETE /symptoms/:id
-    - deletes specified symptom for the user
 
+- GET /
 
-## Technology Used 
+- POST /
+- PATCH /
+- DELETE /
+
+## Technology Used
+
 - NodeJS
 - Express
 - Knex
 - PostgreSQL
-- CORS 
+- CORS
 - Helmet
-
 
 Hosted on Heroku
