@@ -6,6 +6,11 @@ CREATE TABLE products(
     date TIMESTAMPTZ DEFAULT now() NOT NULL,
     name TEXT NOT NULL,
     rating INTEGER NOT NULL,
-    description TEXT,
+    synopsis TEXT NOT NULL,
+    description TEXT NOT NULL,
+    disposal TEXT NOT NULL,
+    link TEXT NOT NULL,
+    image TEXT NOT NULL,
+    category TEXT NOT NULL,
     PRIMARY KEY (id)
 );

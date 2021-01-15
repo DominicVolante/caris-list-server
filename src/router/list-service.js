@@ -21,4 +21,4 @@ const listService = {
     return knex("products").where({ id }).update(updatedProduct);
   },
 };
-module.exports = tuckService;
+module.exports = listService;
