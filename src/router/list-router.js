@@ -10,7 +10,12 @@ const serializeProduct = (product) => ({
   date: product.date,
   name: xss(product.name),
   rating: product.rating,
+  synopsis: xss(product.synopsis),
   description: xss(product.description),
+  disposal: xss(product.disposal),
+  link: xss(product.link),
+  image: xss(product.image),
+  category: xss(product.category),
 });
 
 listRouter
