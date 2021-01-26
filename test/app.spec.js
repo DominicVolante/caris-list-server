@@ -3,21 +3,36 @@ const app = require("../src/app");
 const supertest = require("supertest");
 const { expect } = require("chai");
 
-let symptoms = [
+let products = [
   {
     name: "scdfv",
-    severity: 3,
+    rating: 3,
+    synopsis: "kjnfvksjndfknv",
     description: "sdfv",
+    disposal: "sdhfbnvklsdnf",
+    link: "kjsndfkjvnsdkjn",
+    image: "skdjfnvlkjsndfjklvn",
+    category: "saldjvnsdfjlnv",
   },
   {
-    name: "werfwer",
-    severity: 4,
-    description: "fwerfwe",
+    name: "asf",
+    rating: 2,
+    synopsis: "asvdf",
+    description: "svsg vdfv",
+    disposal: "sdhfvrsefqwbnvklsdnf",
+    link: "asdfasv",
+    image: "fervcecser",
+    category: "gertgxdfgew",
   },
   {
-    name: "fwerf",
-    severity: 2,
-    description: "qwefd",
+    name: "fsdfveecver",
+    rating: 1,
+    synopsis: "rfwerg",
+    description: "sdgwergerfv",
+    disposal: "sdhfbrrgergwsdnvklsdnf",
+    link: "fewcsrfe",
+    image: "skdjfvsdfvefnvlkjsndfjklvn",
+    category: "salfsaerferdjvnsdfjlnv",
   },
 ];
 
@@ -33,55 +48,65 @@ describe("App", () => {
     app.set("db", db);
   });
 
-  before("cleanup", () => db.raw("TRUNCATE TABLE symptoms RESTART IDENTITY;"));
+  before("cleanup", () => db.raw("TRUNCATE TABLE products RESTART IDENTITY;"));
 
   afterEach("cleanup", () =>
-    db.raw("TRUNCATE TABLE symptoms RESTART IDENTITY;")
+    db.raw("TRUNCATE TABLE products RESTART IDENTITY;")
   );
 
   after("disconnect from the database", () => db.destroy());
 
-  describe("tuck routes", () => {
-    context("no symptoms in the database", () => {
-      it("GET /symptoms responds with 200 containing an empty array", () => {
-        return supertest(app).get("/symptoms").expect(200, []);
+  describe("routes", () => {
+    context("no products in the database", () => {
+      it("GET /products responds with 200 containing an empty array", () => {
+        return supertest(app).get("/products").expect(200, []);
       });
     });
   });
 
-  context("there are symptoms in the db", () => {
+  context("there are products in the db", () => {
     beforeEach(() => {
-      return db.insert(symptoms).into("symptoms");
+      return db.insert(products).into("products");
     });
-    it("GET /symptoms responds with 200 containing an array of objects", () => {
+    it("GET /products responds with 200 containing an array of objects", () => {
       return supertest(app)
-        .get("/symptoms")
+        .get("/products")
         .expect(200)
         .expect((res) => {
-          res.body.forEach((symptom) => {
-            expect(symptom).to.be.a("object");
-            expect(symptom).to.include.keys(
+          res.body.forEach((product) => {
+            expect(product).to.be.a("object");
+            expect(product).to.include.keys(
               "id",
               "date",
               "name",
-              "severity",
-              "description"
+              "rating",
+              "synopsis",
+              "description",
+              "disposal",
+              "link",
+              "image",
+              "category"
             );
           });
         });
     });
   });
 
-  context("a symptom is posted to db", () => {
-    it("POST /symptoms responds with 200 and adds data provided if valid", () => {
-      const newSymptom = {
-        name: "werfwer",
-        severity: 4,
-        description: "fwerfwe",
+  context("a product is posted to db", () => {
+    it("POST /products responds with 200 and adds data provided if valid", () => {
+      const newProduct = {
+        name: "sdca",
+        rating: 3,
+        synopsis: "scasd",
+        description: "sdscsdfv",
+        disposal: "sdhfcsdcbnvklsdnf",
+        link: "kjsnsdcadfkjvnsdkjn",
+        image: "skdsdcajfnvlkjsndfjklvn",
+        category: "salasdcdjvnsdfjlnv",
       };
       return supertest(app)
-        .post("/symptoms")
-        .send(newSymptom)
+        .post("/products")
+        .send(newProduct)
         .expect(201)
         .expect((res) => {
           expect(res.body).to.be.a("object");
@@ -89,33 +114,43 @@ describe("App", () => {
             "id",
             "date",
             "name",
-            "severity",
-            "description"
+            "rating",
+            "synopsis",
+            "description",
+            "disposal",
+            "link",
+            "image",
+            "category"
           );
-          expect(res.body.name).to.eql(newSymptom.name);
-          expect(res.body.severity).to.eql(newSymptom.severity);
-          expect(res.body.description).to.eql(newSymptom.description);
-          expect(res.headers.location).to.eql(`/symptoms/${res.body.id}`);
+          expect(res.body.name).to.eql(newProduct.name);
+          expect(res.body.rating).to.eql(newProduct.rating);
+          expect(res.body.synopsis).to.eql(newProduct.synopsis);
+          expect(res.body.description).to.eql(newProduct.description);
+          expect(res.body.disposal).to.eql(newProduct.disposal);
+          expect(res.body.link).to.eql(newProduct.link);
+          expect(res.body.image).to.eql(newProduct.image);
+          expect(res.body.category).to.eql(newProduct.category);
+          expect(res.headers.location).to.eql(`/products/${res.body.id}`);
         });
     });
-    it("POST /symptoms responds with 400 if provided invalid valid", () => {
+    it("POST /products responds with 400 if provided invalid valid", () => {
       const invalidData = {
         invalid: "data",
       };
-      return supertest(app).post("/symptoms").send(invalidData).expect(500);
+      return supertest(app).post("/products").send(invalidData).expect(500);
     });
   });
 
   describe("DELETE", () => {
-    beforeEach("insert symptoms", () => {
-      return db("symptoms").insert(symptoms);
+    beforeEach("insert products", () => {
+      return db("products").insert(products);
     });
-    it("DELETE /symptoms/:id should delete a specified symptom", () => {
+    it("DELETE /products/:id should delete a specified product", () => {
       it("should delete an item", () => {
-        return db("symptoms")
+        return db("products")
           .first()
           .then((check) => {
-            return supertest(app).delete(`/symptoms/${check.id}`).expect(204);
+            return supertest(app).delete(`/products/${check.id}`).expect(204);
           });
       });
     });
@@ -125,24 +160,29 @@ describe("App", () => {
     });
   });
 
-  describe("PATCH /symptoms/:id should update a symptom by id", () => {
-    beforeEach("populate symptoms", () => {
-      return db("symptoms").insert(symptoms);
+  describe("PATCH /products/:id should update a product by id", () => {
+    beforeEach("populate products", () => {
+      return db("products").insert(products);
     });
     it("should update by id", () => {
-      const patchedSymp = {
-        name: "symp",
-        severity: 3,
-        description: "updated symp",
+      const patchedProd = {
+        name: "patched",
+        rating: 3,
+        synopsis: "patched syn",
+        description: "patched desc",
+        disposal: "patched disp",
+        link: "patched link",
+        image: "patched img",
+        category: "patched cat",
       };
       let test;
-      return db("symptoms")
+      return db("products")
         .first()
         .then((_test) => {
           test = _test;
           return supertest(app)
-            .patch(`/symptoms/${test.id}`)
-            .send(patchedSymp)
+            .patch(`/products/${test.id}`)
+            .send(patchedProd)
             .expect(204);
         });
     });

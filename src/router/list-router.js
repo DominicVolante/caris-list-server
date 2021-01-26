@@ -29,15 +29,42 @@ listRouter
       .catch(next);
   })
   .post(bodyParser, (req, res, next) => {
-    for (const field of ["name", "rating", "description"]) {
+    for (const field of [
+      "name",
+      "rating",
+      "synopsis",
+      "description",
+      "disposal",
+      "link",
+      "image",
+      "category",
+    ]) {
       if (!req.body[field]) {
         console.error(`${field} is required`);
         res.status(400);
       }
     }
 
-    const { rating, name, description } = req.body;
-    const newProduct = { rating, name, description };
+    const {
+      name,
+      rating,
+      synopsis,
+      description,
+      disposal,
+      link,
+      image,
+      category,
+    } = req.body;
+    const newProduct = {
+      name,
+      rating,
+      synopsis,
+      description,
+      disposal,
+      link,
+      image,
+      category,
+    };
 
     listService
       .insertProduct(req.app.get("db"), newProduct)
@@ -83,8 +110,26 @@ listRouter
       .catch(next);
   })
   .patch(bodyParser, (req, res, next) => {
-    const { rating, name, description } = req.body;
-    const updateProduct = { rating, name, description };
+    const {
+      name,
+      rating,
+      synopsis,
+      description,
+      disposal,
+      link,
+      image,
+      category,
+    } = req.body;
+    const updateProduct = {
+      name,
+      rating,
+      synopsis,
+      description,
+      disposal,
+      link,
+      image,
+      category,
+    };
 
     listService
       .updateProduct(req.app.get("db"), req.params.id, updateProduct)
